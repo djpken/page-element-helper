@@ -35,3 +35,17 @@ The extension has two scripts that communicate via `chrome.tabs.sendMessage`:
 - `buildCodexDescription(element)` assembles the copied string from `getPageTitle`, `getText`, `getSelector`, and the element's `aria-label` / `data-testid` attributes.
 - `getSelector` prefers `#id`, then `[data-testid="…"]`, then `[aria-label="…"]`, and falls back to a structural `:nth-of-type` path (max 5 levels deep).
 - Picker exits automatically after copying (350 ms delay so the "Copied" flash is visible) or immediately on `Escape`.
+
+## Agent skills
+
+### Issue tracker
+
+Issues live in GitHub Issues for djpken/page-element-helper (via the `gh` CLI). External PRs are not treated as a triage surface. See `docs/agents/issue-tracker.md`.
+
+### Triage labels
+
+Uses the default label vocabulary (needs-triage, needs-info, ready-for-agent, ready-for-human, wontfix). See `docs/agents/triage-labels.md`.
+
+### Domain docs
+
+Single-context: one `CONTEXT.md` + `docs/adr/` at the repo root. See `docs/agents/domain.md`.
