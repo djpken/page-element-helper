@@ -8,10 +8,12 @@ function menuTitle(aiTarget) {
 
 chrome.runtime.onInstalled.addListener(() => {
   chrome.storage.sync.get("aiTarget", ({ aiTarget = "codex" }) => {
-    chrome.contextMenus.create({
-      id: MENU_ID,
-      title: menuTitle(aiTarget),
-      contexts: ["all"],
+    chrome.contextMenus.removeAll(() => {
+      chrome.contextMenus.create({
+        id: MENU_ID,
+        title: menuTitle(aiTarget),
+        contexts: ["all"],
+      });
     });
   });
 });
