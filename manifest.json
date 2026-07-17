@@ -9,7 +9,7 @@
     "48": "icons/icon48.png",
     "128": "icons/icon128.png"
   },
-  "permissions": ["activeTab", "clipboardWrite", "contextMenus"],
+  "permissions": ["activeTab", "clipboardWrite", "contextMenus", "storage"],
   "action": {
     "default_popup": "popup.html",
     "default_icon": {
