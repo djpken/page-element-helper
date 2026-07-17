@@ -1,0 +1,14 @@
+{
+  "popupUsage": {
+    "message": "將滑鼠移到頁面上的元素，點擊即可複製該元素的描述。"
+  },
+  "popupUsageAlt": {
+    "message": "也可以透過右鍵選單或鍵盤快捷鍵啟動。"
+  },
+  "startPickerButton": {
+    "message": "啟動 Picker"
+  },
+  "shortcutSettingsButton": {
+    "message": "開啟快捷鍵設定"
+  }
+}

@@ -4,27 +4,28 @@
 
 ## 基本資料
 
-- **項目名稱**：Codex Page Element Helper
+- **項目名稱**：Page Element Helper
 - **類別**：Developer Tools
 - **語言**：English（介面文字為英文，popup 標籤為中文可於敘述中說明）
 
 ## 簡短描述（最多 132 字元）
 
 ```
-Hover a page element, copy an AI-ready description for Codex or Claude Code — selector, text, aria-label, and more.
+Hover a page element, copy an AI-ready description for your coding agent — selector, text, aria-label, and more.
 ```
 
 ## 完整描述
 
 ```
-Codex Page Element Helper lets you hover over any element on a web page and instantly copy a ready-to-paste description for AI coding agents like Codex and Claude Code.
+Page Element Helper lets you hover over any element on a web page and instantly copy a ready-to-paste description for AI coding agents — Codex, Claude Code, Cursor, or any other tool that takes text input.
 
-Stop manually describing "the blue button in the top nav" — just hover, click, and paste. The copied text includes the page title, URL, tag name, aria-label, visible text, CSS selector, and data-testid, giving your AI agent everything it needs to locate the exact element you mean.
+Stop manually describing "the blue button in the top nav" — just hover, click, and paste. The copied text includes the page title, URL, tag name, aria-label, visible text, CSS selector, and data-testid (any field with no value is omitted), giving your AI agent everything it needs to locate the exact element you mean.
 
 FEATURES
-• Toggle the picker with a keyboard shortcut (Control+Shift+E on macOS, Alt+Shift+E on Windows/Linux) or the right-click context menu
+• Toggle the picker with a keyboard shortcut (Control+Shift+E on macOS, Alt+Shift+E on Windows/Linux), the right-click context menu, or the popup's Start Picker button
 • Visual overlay highlights the hovered element with an info panel
-• Switch between Codex and Claude Code output formats from the popup
+• Harness-neutral output — the same copied text works with any AI coding tool
+• Popup UI in English and Traditional Chinese, following your browser's language
 • Works on any website
 
 PRIVACY
@@ -39,8 +40,7 @@ No build tooling, no bloat — a small focused tool for developers who pair with
 |---|---|
 | `activeTab` | Used to read the DOM of the tab the user is actively inspecting, only while the picker is toggled on. |
 | `clipboardWrite` | Used to copy the generated element description text to the user's clipboard when they click an element. |
-| `contextMenus` | Adds a single right-click menu item ("Copy element description for Codex/Claude Code") as an alternate way to trigger the copy action. |
-| `storage` | Stores one user preference (which AI tool format to use: Codex or Claude Code) via chrome.storage.sync. No other data is stored. |
+| `contextMenus` | Adds a single right-click menu item ("Copy element description") as an alternate way to trigger the copy action. |
 | Host permission `<all_urls>` (content script) | The element picker overlay must be able to run on any page the developer chooses to inspect, since target pages are arbitrary developer projects, not a fixed set of sites. |
 
 ## 單一用途說明（Single purpose）
@@ -51,7 +51,7 @@ Lets the user pick a DOM element on any page and copy a structured, AI-agent-fri
 
 ## 資料使用揭露（Data disclosure 表單）
 
-全部選「否／不適用」：本擴充功能不蒐集、不儲存（除本機 chrome.storage 偏好設定外）、不傳輸任何使用者資料，也不含分析或追蹤程式碼。
+全部選「否／不適用」：本擴充功能不蒐集、不儲存、不傳輸任何使用者資料，也不含分析或追蹤程式碼。
 
 ## 圖片素材
 
@@ -71,5 +71,5 @@ Lets the user pick a DOM element on any page and copy a structured, AI-agent-fri
 
 ```bash
 cd page-element-helper
-zip -r page-element-helper-v1.0.0.zip manifest.json background.js content.js popup.html popup.js icons
+zip -r page-element-helper-v1.0.0.zip manifest.json background.js content.js popup.html popup.js icons _locales
 ```

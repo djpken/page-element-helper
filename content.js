@@ -201,25 +201,24 @@ function hideUi() {
   if (STATE.panel) STATE.panel.style.display = "none";
 }
 
-function showCopied(description, aiTarget) {
+function showCopied(description) {
   if (!STATE.panel) return;
   STATE.panel.innerHTML = "";
   const title = document.createElement("strong");
   const body = document.createElement("div");
-  title.textContent = aiTarget === "claude-code" ? "Copied for Claude Code" : "Copied for Codex";
+  title.textContent = "Copied";
   title.style.color = "#86efac";
   body.textContent = description;
   body.style.marginTop = "6px";
   STATE.panel.append(title, body);
 }
 
-async function copyElementAndExit(element) {
+function copyElementAndExit(element) {
   if (!(element instanceof Element)) return;
 
-  const { aiTarget = "codex" } = await chrome.storage.sync.get("aiTarget");
-  const description = buildDescription(element, aiTarget);
+  const description = buildDescription(element);
   copyText(description);
-  showCopied(description, aiTarget);
+  showCopied(description);
   window.setTimeout(() => setEnabled(false), 350);
 }
 
@@ -238,21 +237,22 @@ async function copyText(text) {
   }
 }
 
-function buildDescription(element, aiTarget) {
-  const prefix = aiTarget === "claude-code"
-    ? "Use this element in Claude Code:"
-    : "Use this element on the following page:";
+function buildDescription(element) {
   const parts = [
-    `page title: ${getPageTitle()}`,
-    `page url: ${window.location.href}`,
-    `element: ${element.tagName.toLowerCase()}`,
-    `aria-label: ${element.getAttribute("aria-label") || ""}`,
-    `text: ${getText(element)}`,
-    `selector: ${getSelector(element)}`,
-    `data-testid: ${element.getAttribute("data-testid") || ""}`,
-  ];
+    line("page title", getPageTitle()),
+    line("page url", window.location.href),
+    line("element", element.tagName.toLowerCase()),
+    line("aria-label", element.getAttribute("aria-label") || ""),
+    line("text", getText(element)),
+    line("selector", getSelector(element)),
+    line("data-testid", element.getAttribute("data-testid") || ""),
+  ].filter(Boolean);
 
-  return `${prefix}\n${parts.join("\n")}`;
+  return `Use this element:\n${parts.join("\n")}`;
+}
+
+function line(label, value) {
+  return value ? `${label}: ${value}` : null;
 }
 
 function getPageTitle() {
