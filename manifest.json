@@ -1,14 +1,15 @@
 {
   "manifest_version": 3,
-  "name": "Codex Page Element Helper",
+  "name": "Page Element Helper",
   "version": "1.0.0",
-  "description": "Hover a page element and copy an AI-ready description (Codex or Claude Code): selector, aria-label, text, and more.",
+  "description": "Hover a page element and copy an AI-ready description: selector, aria-label, text, and more.",
+  "default_locale": "en",
   "icons": {
     "16": "icons/icon16.png",
     "48": "icons/icon48.png",
     "128": "icons/icon128.png"
   },
-  "permissions": ["activeTab", "clipboardWrite", "contextMenus", "storage"],
+  "permissions": ["activeTab", "clipboardWrite", "contextMenus"],
   "action": {
     "default_popup": "popup.html",
     "default_icon": {
@@ -26,7 +27,7 @@
         "default": "Alt+Shift+E",
         "mac": "MacCtrl+Shift+E"
       },
-      "description": "Toggle Codex element picker"
+      "description": "Toggle element picker"
     }
   },
   "content_scripts": [

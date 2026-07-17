@@ -1,0 +1,14 @@
+{
+  "popupUsage": {
+    "message": "Hover an element on the page, then click to copy its description."
+  },
+  "popupUsageAlt": {
+    "message": "Also available via the right-click menu or your keyboard shortcut."
+  },
+  "startPickerButton": {
+    "message": "Start Picker"
+  },
+  "shortcutSettingsButton": {
+    "message": "Keyboard Shortcut Settings"
+  }
+}

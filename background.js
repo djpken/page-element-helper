@@ -1,27 +1,12 @@
 const MENU_ID = "copy-element-description";
 
-function menuTitle(aiTarget) {
-  return aiTarget === "claude-code"
-    ? "Copy element description for Claude Code"
-    : "Copy element description for Codex";
-}
-
 chrome.runtime.onInstalled.addListener(() => {
-  chrome.storage.sync.get("aiTarget", ({ aiTarget = "codex" }) => {
-    chrome.contextMenus.removeAll(() => {
-      chrome.contextMenus.create({
-        id: MENU_ID,
-        title: menuTitle(aiTarget),
-        contexts: ["all"],
-      });
+  chrome.contextMenus.removeAll(() => {
+    chrome.contextMenus.create({
+      id: MENU_ID,
+      title: "Copy element description",
+      contexts: ["all"],
     });
-  });
-});
-
-chrome.storage.onChanged.addListener((changes, area) => {
-  if (area !== "sync" || !changes.aiTarget) return;
-  chrome.contextMenus.update(MENU_ID, {
-    title: menuTitle(changes.aiTarget.newValue),
   });
 });
 

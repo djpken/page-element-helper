@@ -1,6 +1,6 @@
-# Codex Page Element Helper
+# Page Element Helper
 
-A minimal Chrome extension (Manifest V3) that lets you hover over any element on a web page and copy an **AI-ready description string** — ready to paste straight into [Codex](https://openai.com/codex/) or [Claude Code](https://claude.com/claude-code) so the agent knows exactly which element you mean.
+A minimal Chrome extension (Manifest V3) that lets you hover over any element on a web page and copy an **AI-ready description string** — ready to paste straight into any AI coding tool (Codex, Claude Code, Cursor, or otherwise) so the agent knows exactly which element you mean.
 
 No build step, no dependencies, no telemetry. Everything runs locally in your browser.
 
@@ -23,15 +23,16 @@ No build step, no dependencies, no telemetry. Everything runs locally in your br
 1. Toggle the element picker:
    - macOS: `Control+Shift+E`
    - Windows/Linux: `Alt+Shift+E`
-   - (customizable at `chrome://extensions/shortcuts`)
+   - (customizable at `chrome://extensions/shortcuts`, or reachable via the **Keyboard Shortcut Settings** button in the popup)
+   - or click the extension icon and press **Start Picker**
 2. Hover over elements — a blue overlay highlights the target and a panel shows its tag, `aria-label`, visible text, CSS selector, and `data-testid`.
-3. Click the element (or right-click → **Copy element description for Codex/Claude Code**) to copy the description. The picker exits automatically.
+3. Click the element (or right-click → **Copy element description**) to copy the description. The picker exits automatically.
 4. Press `Escape` at any time to exit without copying.
 
-The copied text looks like this:
+The copied text looks like this (any field with no value, e.g. an empty `aria-label`, is omitted entirely):
 
 ```
-Use this element on the following page:
+Use this element:
 page title: <title>
 page url: <url>
 element: <tag>
@@ -41,14 +42,11 @@ selector: <selector>
 data-testid: <data-testid>
 ```
 
-## Choosing your AI tool
+The output is harness-neutral — it never names a specific AI tool, so it works equally well pasted into Codex, Claude Code, or any other coding agent.
 
-Click the extension icon to open the popup and choose **Codex** or **Claude Code** as the target. This changes:
-- the wording of the copied description's first line,
-- the context menu item's title,
-- the "Copied for…" confirmation shown in the hover panel.
+## Popup
 
-Your choice is saved via `chrome.storage.sync` and persists across sessions.
+Click the extension icon for a short usage reminder and two shortcuts: **Start Picker** (same as the keyboard shortcut) and **Keyboard Shortcut Settings** (opens `chrome://extensions/shortcuts`). The popup text follows your browser's UI language (English or Traditional Chinese; English otherwise).
 
 ## Privacy
 
@@ -61,7 +59,6 @@ This extension does not collect, store, or transmit any data. It reads the DOM o
 | `activeTab` | Read the hovered/clicked element on the tab you're interacting with |
 | `clipboardWrite` | Copy the generated description to your clipboard |
 | `contextMenus` | Provide the right-click "Copy element description" menu item |
-| `storage` | Remember your Codex / Claude Code preference |
 | Content script on `<all_urls>` | The picker overlay works on any page you choose to inspect |
 
 ## Development

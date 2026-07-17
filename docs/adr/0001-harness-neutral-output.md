@@ -1,0 +1,3 @@
+# Harness-neutral copied output
+
+The extension previously let the user pick an `aiTarget` (Codex / Claude Code) via a popup dropdown, which customized the copied text's opening line ("Use this element in Claude Code:") and the post-copy toast ("Copied for Claude Code"). Supporting more than two hardcoded harnesses would mean either an ever-growing dropdown or free-text harness naming. We instead dropped per-harness branding entirely: the copied output always starts with a neutral "Use this element:" line, and the `aiTarget` setting, its `chrome.storage.sync` persistence, and the popup dropdown were deleted. This trades away personalization for zero-maintenance support of any harness, since the output no longer names one.
