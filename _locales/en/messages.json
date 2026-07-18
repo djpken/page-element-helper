@@ -10,5 +10,17 @@
   },
   "shortcutSettingsButton": {
     "message": "Keyboard Shortcut Settings"
+  },
+  "recordShortcutButton": {
+    "message": "Set Custom Shortcut"
+  },
+  "recordShortcutButtonActive": {
+    "message": "Press a key combination…"
+  },
+  "customShortcutPrefix": {
+    "message": "Custom shortcut: "
+  },
+  "customShortcutNotSet": {
+    "message": "Not set (the built-in default still works)"
   }
 }
