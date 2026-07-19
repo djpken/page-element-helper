@@ -11,8 +11,21 @@ const SKIP_SELECTOR = [
   "#codex-page-element-helper-panel",
 ].join(",");
 
+const SHORTCUT_STORAGE_KEY = "customShortcut";
+let customShortcut = null;
+
 function init() {
   document.addEventListener("contextmenu", onContextMenu, true);
+  document.addEventListener("keydown", onGlobalKeyDown, true);
+
+  chrome.storage.local.get(SHORTCUT_STORAGE_KEY).then((result) => {
+    customShortcut = result[SHORTCUT_STORAGE_KEY] || null;
+  });
+  chrome.storage.onChanged.addListener((changes, area) => {
+    if (area === "local" && SHORTCUT_STORAGE_KEY in changes) {
+      customShortcut = changes[SHORTCUT_STORAGE_KEY].newValue || null;
+    }
+  });
 
   chrome.runtime.onMessage.addListener((message) => {
     if (message?.type === "TOGGLE_PICKER") {
@@ -24,6 +37,31 @@ function init() {
       copyElementAndExit(STATE.contextElement || STATE.hoveredElement);
     }
   });
+}
+
+function onGlobalKeyDown(event) {
+  if (!customShortcut || event.repeat || isEditableTarget(event.target)) return;
+  if (!matchesShortcut(event, customShortcut)) return;
+
+  event.preventDefault();
+  setEnabled(!STATE.enabled);
+}
+
+function matchesShortcut(event, shortcut) {
+  return (
+    event.code === shortcut.code &&
+    event.ctrlKey === shortcut.ctrlKey &&
+    event.shiftKey === shortcut.shiftKey &&
+    event.altKey === shortcut.altKey &&
+    event.metaKey === shortcut.metaKey
+  );
+}
+
+function isEditableTarget(target) {
+  return (
+    target instanceof HTMLElement &&
+    (target.tagName === "INPUT" || target.tagName === "TEXTAREA" || target.isContentEditable)
+  );
 }
 
 function setEnabled(enabled) {

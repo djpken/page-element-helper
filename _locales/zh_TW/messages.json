@@ -10,5 +10,17 @@
   },
   "shortcutSettingsButton": {
     "message": "開啟快捷鍵設定"
+  },
+  "recordShortcutButton": {
+    "message": "設定自訂快捷鍵"
+  },
+  "recordShortcutButtonActive": {
+    "message": "請按下按鍵組合…"
+  },
+  "customShortcutPrefix": {
+    "message": "自訂快捷鍵："
+  },
+  "customShortcutNotSet": {
+    "message": "尚未設定（內建預設快捷鍵仍可使用）"
   }
 }

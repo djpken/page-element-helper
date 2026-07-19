@@ -1,4 +1,5 @@
 const SUPPORTED_LANGS = ["zh_TW", "en"];
+const SHORTCUT_STORAGE_KEY = "customShortcut";
 
 function normalizeLang(uiLang) {
   return uiLang?.toLowerCase().startsWith("zh") ? "zh_TW" : "en";
@@ -10,17 +11,46 @@ async function loadMessages(lang) {
   return Object.fromEntries(Object.entries(json).map(([key, { message }]) => [key, message]));
 }
 
-async function applyLang(lang) {
-  const messages = await loadMessages(lang);
-  document.getElementById("usage").textContent = messages.popupUsage;
-  document.getElementById("usage-alt").textContent = messages.popupUsageAlt;
-  document.getElementById("start-picker").textContent = messages.startPickerButton;
-  document.getElementById("open-shortcuts").textContent = messages.shortcutSettingsButton;
-  document.getElementById("lang-toggle").textContent = lang === "zh_TW" ? "English" : "中文";
-  document.documentElement.lang = lang === "zh_TW" ? "zh-Hant" : "en";
+function formatShortcut(shortcut) {
+  const parts = [];
+  if (shortcut.ctrlKey) parts.push("Ctrl");
+  if (shortcut.metaKey) parts.push("Cmd");
+  if (shortcut.altKey) parts.push("Alt");
+  if (shortcut.shiftKey) parts.push("Shift");
+  parts.push(shortcut.label);
+  return parts.join("+");
+}
+
+function labelForKey(event) {
+  if (event.key === " ") return "Space";
+  return event.key.length === 1 ? event.key.toUpperCase() : event.key;
 }
 
 (async () => {
+  let messages;
+  let recording = false;
+  let customShortcut = (await chrome.storage.local.get(SHORTCUT_STORAGE_KEY))[SHORTCUT_STORAGE_KEY] || null;
+
+  function renderShortcut() {
+    document.getElementById("record-shortcut").textContent = recording
+      ? messages.recordShortcutButtonActive
+      : messages.recordShortcutButton;
+    document.getElementById("shortcut-label").textContent = customShortcut
+      ? messages.customShortcutPrefix + formatShortcut(customShortcut)
+      : messages.customShortcutNotSet;
+  }
+
+  async function applyLang(lang) {
+    messages = await loadMessages(lang);
+    document.getElementById("usage").textContent = messages.popupUsage;
+    document.getElementById("usage-alt").textContent = messages.popupUsageAlt;
+    document.getElementById("start-picker").textContent = messages.startPickerButton;
+    document.getElementById("open-shortcuts").textContent = messages.shortcutSettingsButton;
+    document.getElementById("lang-toggle").textContent = lang === "zh_TW" ? "English" : "中文";
+    document.documentElement.lang = lang === "zh_TW" ? "zh-Hant" : "en";
+    renderShortcut();
+  }
+
   const { lang: storedLang } = await chrome.storage.local.get("lang");
   let currentLang = SUPPORTED_LANGS.includes(storedLang)
     ? storedLang
@@ -46,5 +76,41 @@ async function applyLang(lang) {
   document.getElementById("open-shortcuts").addEventListener("click", () => {
     chrome.tabs.create({ url: "chrome://extensions/shortcuts" });
     window.close();
+  });
+
+  document.getElementById("record-shortcut").addEventListener("click", () => {
+    if (recording) return;
+    recording = true;
+    renderShortcut();
+
+    const onKeyDown = async (event) => {
+      if (event.key === "Escape") {
+        stop();
+        return;
+      }
+      if (["Control", "Shift", "Alt", "Meta"].includes(event.key)) return;
+
+      event.preventDefault();
+      if (!(event.ctrlKey || event.altKey || event.metaKey)) return;
+
+      customShortcut = {
+        code: event.code,
+        ctrlKey: event.ctrlKey,
+        shiftKey: event.shiftKey,
+        altKey: event.altKey,
+        metaKey: event.metaKey,
+        label: labelForKey(event),
+      };
+      await chrome.storage.local.set({ [SHORTCUT_STORAGE_KEY]: customShortcut });
+      stop();
+    };
+
+    function stop() {
+      recording = false;
+      window.removeEventListener("keydown", onKeyDown, true);
+      renderShortcut();
+    }
+
+    window.addEventListener("keydown", onKeyDown, true);
   });
 })();
