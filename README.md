@@ -21,9 +21,9 @@ No build step, no dependencies, no telemetry. Everything runs locally in your br
 ## Usage
 
 1. Toggle the element picker:
-   - macOS: `Control+Shift+E`
-   - Windows/Linux: `Alt+Shift+E`
-   - (customizable at `chrome://extensions/shortcuts`, or reachable via the **Keyboard Shortcut Settings** button in the popup)
+   - macOS 預設：`Control+Shift+E`
+   - Windows/Linux 預設：`Alt+Shift+E`
+   - 可在 popup 按 **Set Custom Shortcut** 錄製新的組合鍵
    - or click the extension icon and press **Start Picker**
 2. Hover over elements — a blue overlay highlights the target and a panel shows its tag, `aria-label`, visible text, CSS selector, and `data-testid`.
 3. Click the element (or right-click → **Copy element description**) to copy the description. The picker exits automatically.
@@ -46,7 +46,7 @@ The output is harness-neutral — it never names a specific AI tool, so it works
 
 ## Popup
 
-Click the extension icon for a short usage reminder and two shortcuts: **Start Picker** (same as the keyboard shortcut) and **Keyboard Shortcut Settings** (opens `chrome://extensions/shortcuts`). The popup text follows your browser's UI language (English or Traditional Chinese; English otherwise).
+Click the extension icon for a short usage reminder, **Start Picker**, and a custom shortcut recorder. The popup text follows your browser's UI language (English or Traditional Chinese; English otherwise).
 
 ## Privacy
 

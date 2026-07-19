@@ -12,14 +12,25 @@ const SKIP_SELECTOR = [
 ].join(",");
 
 const SHORTCUT_STORAGE_KEY = "customShortcut";
-let customShortcut = null;
+let customShortcut = getDefaultShortcut();
+
+function getDefaultShortcut() {
+  return {
+    code: "KeyE",
+    ctrlKey: /Mac/.test(navigator.platform),
+    shiftKey: true,
+    altKey: !/Mac/.test(navigator.platform),
+    metaKey: false,
+    label: "E",
+  };
+}
 
 function init() {
   document.addEventListener("contextmenu", onContextMenu, true);
   document.addEventListener("keydown", onGlobalKeyDown, true);
 
   chrome.storage.local.get(SHORTCUT_STORAGE_KEY).then((result) => {
-    customShortcut = result[SHORTCUT_STORAGE_KEY] || null;
+    customShortcut = result[SHORTCUT_STORAGE_KEY] || getDefaultShortcut();
   });
   chrome.storage.onChanged.addListener((changes, area) => {
     if (area === "local" && SHORTCUT_STORAGE_KEY in changes) {
@@ -40,10 +51,11 @@ function init() {
 }
 
 function onGlobalKeyDown(event) {
-  if (!customShortcut || event.repeat || isEditableTarget(event.target)) return;
+  if (event.repeat) return;
   if (!matchesShortcut(event, customShortcut)) return;
 
   event.preventDefault();
+  event.stopPropagation();
   setEnabled(!STATE.enabled);
 }
 
@@ -54,13 +66,6 @@ function matchesShortcut(event, shortcut) {
     event.shiftKey === shortcut.shiftKey &&
     event.altKey === shortcut.altKey &&
     event.metaKey === shortcut.metaKey
-  );
-}
-
-function isEditableTarget(target) {
-  return (
-    target instanceof HTMLElement &&
-    (target.tagName === "INPUT" || target.tagName === "TEXTAREA" || target.isContentEditable)
   );
 }
 

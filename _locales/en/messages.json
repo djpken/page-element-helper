@@ -8,9 +8,6 @@
   "startPickerButton": {
     "message": "Start Picker"
   },
-  "shortcutSettingsButton": {
-    "message": "Keyboard Shortcut Settings"
-  },
   "recordShortcutButton": {
     "message": "Set Custom Shortcut"
   },
