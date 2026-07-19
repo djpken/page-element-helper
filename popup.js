@@ -45,7 +45,6 @@ function labelForKey(event) {
     document.getElementById("usage").textContent = messages.popupUsage;
     document.getElementById("usage-alt").textContent = messages.popupUsageAlt;
     document.getElementById("start-picker").textContent = messages.startPickerButton;
-    document.getElementById("open-shortcuts").textContent = messages.shortcutSettingsButton;
     document.getElementById("lang-toggle").textContent = lang === "zh_TW" ? "English" : "中文";
     document.documentElement.lang = lang === "zh_TW" ? "zh-Hant" : "en";
     renderShortcut();
@@ -70,11 +69,6 @@ function labelForKey(event) {
         void chrome.runtime.lastError;
       });
     }
-    window.close();
-  });
-
-  document.getElementById("open-shortcuts").addEventListener("click", () => {
-    chrome.tabs.create({ url: "chrome://extensions/shortcuts" });
     window.close();
   });
 

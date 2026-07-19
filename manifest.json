@@ -21,15 +21,6 @@
   "background": {
     "service_worker": "background.js"
   },
-  "commands": {
-    "toggle-picker": {
-      "suggested_key": {
-        "default": "Alt+Shift+E",
-        "mac": "MacCtrl+Shift+E"
-      },
-      "description": "Toggle element picker"
-    }
-  },
   "content_scripts": [
     {
       "matches": ["<all_urls>"],

@@ -8,9 +8,6 @@
   "startPickerButton": {
     "message": "啟動 Picker"
   },
-  "shortcutSettingsButton": {
-    "message": "開啟快捷鍵設定"
-  },
   "recordShortcutButton": {
     "message": "設定自訂快捷鍵"
   },

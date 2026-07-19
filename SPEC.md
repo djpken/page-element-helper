@@ -31,8 +31,8 @@
 ### F4：Popup 重建
 - 拿掉 `<select id="ai-target">` 下拉選單與相關的 `chrome.storage.sync` 讀寫。
 - 新增兩顆按鈕：
-  - **啟動 Picker**：查詢目前分頁，送出 `{ type: "TOGGLE_PICKER" }` 訊息（與鍵盤快捷鍵、`background.js` 的 `chrome.commands.onCommand` 效果相同），送出後關閉 popup。
-  - **開啟快捷鍵設定**：`chrome.tabs.create({ url: "chrome://extensions/shortcuts" })`。
+  - **啟動 Picker**：查詢目前分頁，送出 `{ type: "TOGGLE_PICKER" }` 訊息，送出後關閉 popup。
+- 新增「設定自訂快捷鍵」錄製按鈕，將組合鍵存入 `chrome.storage.local`。
 - 新增一段使用說明文字（快捷鍵、右鍵選單、hover 後點擊複製）。
 
 ### F5：Popup 雙語化
@@ -40,11 +40,14 @@
 - `manifest.json` 需要 `"default_locale": "en"`。
 - 語系範圍僅限 popup 說明文字與按鈕文字；複製到剪貼簿的內容（F1）不受語系影響，永遠是固定英文。
 
-### F6：移除 storage 權限
-- `manifest.json` 的 `permissions` 移除 `"storage"`（不再有任何 `chrome.storage` 用途）。
+### F6：自訂快捷鍵
+- 移除 `commands` manifest 區塊與 `background.js` 的 `chrome.commands` 監聽。
+- `content.js` 直接監聽自訂快捷鍵，並透過 `chrome.storage.onChanged` 即時套用變更。
+- 未設定自訂值時，macOS 使用 `Control+Shift+E`，其他平台使用 `Alt+Shift+E`。
+- 快捷鍵比對成功時攔截瀏覽器與頁面的預設行為，包含輸入欄位焦點。
 
 ### F7：品牌中性化
-- `manifest.json` 的 `name` 改為 `Page Element Helper`，`description` 移除 `(Codex or Claude Code)` 字樣，`commands.toggle-picker.description` 改為 `Toggle element picker`。
+- `manifest.json` 的 `name` 改為 `Page Element Helper`，`description` 移除 `(Codex or Claude Code)` 字樣。
 
 ---
 
@@ -52,11 +55,11 @@
 
 ```
 page-element-helper/
-├── manifest.json              # 移除 storage 權限；新增 default_locale；name/description 中性化
-├── background.js              # 移除 aiTarget 讀取與 storage.onChanged 監聽；context menu 標題固定
+├── manifest.json              # 新增 default_locale；移除 commands；name/description 中性化
+├── background.js              # context menu 標題固定
 ├── content.js                 # buildDescription 移除 aiTarget 參數、加入空欄位省略；showCopied 文字固定
-├── popup.html                 # 移除下拉選單；新增說明文字容器 + 兩顆按鈕
-├── popup.js                   # 移除 storage 讀寫；新增 chrome.i18n 文字填入、按鈕事件
+├── popup.html                 # 移除下拉選單與系統快捷鍵設定按鈕；保留快捷鍵錄製
+├── popup.js                   # 讀寫自訂快捷鍵並填入雙語文案
 ├── _locales/en/messages.json  # 新增：英文文案
 ├── _locales/zh_TW/messages.json # 新增：繁中文案
 └── SPEC.md
@@ -98,10 +101,6 @@ startPickerButton.addEventListener("click", async () => {
   window.close();
 });
 
-shortcutSettingsButton.addEventListener("click", () => {
-  chrome.tabs.create({ url: "chrome://extensions/shortcuts" });
-  window.close();
-});
 ```
 
 ---
