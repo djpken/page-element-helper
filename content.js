@@ -151,10 +151,6 @@ function onMouseMove(event) {
 function onClick(event) {
   if (!STATE.enabled || event.button > 0) return;
 
-  event.preventDefault();
-  event.stopPropagation();
-  event.stopImmediatePropagation();
-
   copyElementAndExit(STATE.hoveredElement || event.target);
 }
 
