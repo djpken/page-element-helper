@@ -1,5 +1,6 @@
 const STATE = {
   enabled: false,
+  copying: false,
   hoveredElement: null,
   contextElement: null,
   overlay: null,
@@ -74,13 +75,18 @@ function setEnabled(enabled) {
   STATE.enabled = enabled;
 
   if (enabled) {
+    STATE.copying = false;
     ensureUi();
     document.addEventListener("mousemove", onMouseMove, true);
+    document.addEventListener("pointerdown", onClick, true);
+    document.addEventListener("mousedown", onClick, true);
     document.addEventListener("click", onClick, true);
     document.addEventListener("contextmenu", onPickerContextMenu, true);
     document.addEventListener("keydown", onKeyDown, true);
   } else {
     document.removeEventListener("mousemove", onMouseMove, true);
+    document.removeEventListener("pointerdown", onClick, true);
+    document.removeEventListener("mousedown", onClick, true);
     document.removeEventListener("click", onClick, true);
     document.removeEventListener("contextmenu", onPickerContextMenu, true);
     document.removeEventListener("keydown", onKeyDown, true);
@@ -143,13 +149,13 @@ function onMouseMove(event) {
 }
 
 function onClick(event) {
-  if (!STATE.enabled || !STATE.hoveredElement) return;
+  if (!STATE.enabled || event.button > 0) return;
 
   event.preventDefault();
   event.stopPropagation();
   event.stopImmediatePropagation();
 
-  copyElementAndExit(STATE.hoveredElement);
+  copyElementAndExit(STATE.hoveredElement || event.target);
 }
 
 function onContextMenu(event) {
@@ -244,39 +250,49 @@ function hideUi() {
   if (STATE.panel) STATE.panel.style.display = "none";
 }
 
-function showCopied(description) {
+function showCopied(description, copied) {
   if (!STATE.panel) return;
   STATE.panel.innerHTML = "";
   const title = document.createElement("strong");
   const body = document.createElement("div");
-  title.textContent = "Copied";
-  title.style.color = "#86efac";
+  title.textContent = copied ? "Copied" : "Copy failed";
+  title.style.color = copied ? "#86efac" : "#fca5a5";
   body.textContent = description;
   body.style.marginTop = "6px";
   STATE.panel.append(title, body);
 }
 
-function copyElementAndExit(element) {
-  if (!(element instanceof Element)) return;
+async function copyElementAndExit(element) {
+  if (!(element instanceof Element) || STATE.copying) return;
 
+  STATE.copying = true;
   const description = buildDescription(element);
-  copyText(description);
-  showCopied(description);
-  window.setTimeout(() => setEnabled(false), 350);
+  const copied = await copyText(description);
+  showCopied(description, copied);
+  window.setTimeout(() => {
+    STATE.copying = false;
+    setEnabled(false);
+  }, 350);
 }
 
 async function copyText(text) {
   try {
     await navigator.clipboard.writeText(text);
+    return true;
   } catch {
     const textarea = document.createElement("textarea");
     textarea.value = text;
     textarea.style.position = "fixed";
     textarea.style.opacity = "0";
     document.body.append(textarea);
-    textarea.select();
-    document.execCommand("copy");
-    textarea.remove();
+    try {
+      textarea.select();
+      return document.execCommand("copy");
+    } catch {
+      return false;
+    } finally {
+      textarea.remove();
+    }
   }
 }
 
